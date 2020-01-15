@@ -12,15 +12,18 @@ const io = socketIo(server);
 
 app.use(express.static(publicDirectoryPath));    
 
-let count = 0;
+// let count = 0;
+const messageString = 'Welcome';
 
 io.on('connection', (socket)=>{
-    socket.emit('countUpdated', count);
     console.log('New Connection Added....');
-    socket.on('increment', ()=>{
-        count++;
-        io.emit('countUpdated', count);
-    });
+
+    socket.emit('message', 'Welcome!');
+
+    socket.on('sendMessage', (message)=>{
+        console.log('new message recieved on server');
+        io.emit('message', message);
+    })
 });
 
 server.listen(port, ()=>{
