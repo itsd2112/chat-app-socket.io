@@ -12,10 +12,17 @@ const io = socketIo(server);
 
 app.use(express.static(publicDirectoryPath));    
 
-io.on('connection', ()=>{
+let count = 0;
+
+io.on('connection', (socket)=>{
+    socket.emit('countUpdated', count);
     console.log('New Connection Added....');
-})
+    socket.on('increment', ()=>{
+        count++;
+        io.emit('countUpdated', count);
+    });
+});
 
 server.listen(port, ()=>{
     console.log('server is running on port:', port);
-})
+});
